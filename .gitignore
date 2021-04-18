@@ -41,6 +41,9 @@ pip-delete-this-directory.txt
 # VSCode
 .vscode/
 
+# database files
+*.db
+
 # Unit test / coverage reports
 htmlcov/
 .tox/

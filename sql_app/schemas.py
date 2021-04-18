@@ -28,11 +28,12 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    token: str
+    pass
     
 
 class User(UserBase):   
     id: int
+    token: str
     premium: bool
     
     contacts: List[Contact] = []

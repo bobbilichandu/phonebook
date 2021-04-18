@@ -12,7 +12,8 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
 def get_user_by_phonenumber(db: Session, phonenumber: str):
-    return db.query(models.User).filter(models.User.phonenumber == phonenumber).first()
+    db_user = db.query(models.User).filter(models.User.phonenumber == phonenumber).first()
+    
 
 def create_user(db: Session, user:schemas.UserCreate):
     token = hash(user.email + user.phonenumber)
