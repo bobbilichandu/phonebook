@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+phonebook/
 build/
 develop-eggs/
 dist/
@@ -36,6 +37,9 @@ MANIFEST
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+
+# VSCode
+.vscode/
 
 # Unit test / coverage reports
 htmlcov/
