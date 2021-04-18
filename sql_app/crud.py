@@ -24,11 +24,11 @@ def create_user(db: Session, user:schemas.UserCreate):
     return db_user
 
 def get_contacts(db: Session, user_id: int, skip: int = 0, limit: int = 100):
-    return db.query(models.Contact).filter(models.User.id == user_id).offset(skip).limit(limit).all()
+    return db.query(models.Contact).filter(models.Contact.owner_id == user_id).offset(skip).limit(limit).all()
 
 def create_user_contact(db: Session, contact: schemas.ContactCreate, user_id: int):
-    db_item = models.Contact(**contact.dict(), owner_id=user_id)
-    db.add(db_item)
+    db_contact = models.Contact(**contact.dict(), owner_id=user_id)
+    db.add(db_contact)
     db.commit()
-    db.refresh(db_item)
-    return db_item
+    db.refresh(db_contact)
+    return db_contact
