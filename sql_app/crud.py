@@ -12,7 +12,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
 def get_user_by_phonenumber(db: Session, phonenumber: str):
-    db_user = db.query(models.User).filter(models.User.phonenumber == phonenumber).first()
+    return db.query(models.User).filter(models.User.phonenumber == phonenumber).first()
     
 
 def create_user(db: Session, user:schemas.UserCreate):
@@ -32,3 +32,23 @@ def create_user_contact(db: Session, contact: schemas.ContactCreate, user_id: in
     db.commit()
     db.refresh(db_contact)
     return db_contact
+
+def update_user_email(db: Session, user_id: int, mail: str):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if db_user is None:
+        return None
+    db_user.email = mail
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+def update_user_phonenumber(db: Session, user_id: int, phone_number: str):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if db_user is None:
+        return None
+    db_user.phonenumber = phone_number
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user

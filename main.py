@@ -145,6 +145,48 @@ def get_contacts_of_user(param: str, token: str, db: Session = Depends(get_db)):
         else:
             raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
     raise HTTPException(status_code=404, detail="User not found")
+
+
+@phonebook.post("/users/{param}/updateUserEmail/", response_model=schemas.User)
+def update_user_by_param(param: str, token: str, update_param: str, db: Session = Depends(get_db)):
+    if not validate_email(update_param):
+        raise HTTPException(status_code=400, detail="Invalid Parameter, Please provide a valid new email")
+    if (not validate_email(param)) and (not validate_phonenumber(param)):
+        raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
+    db_user = crud.get_user_by_email(db=db, email=param)
+    if db_user is not None:
+        if db_user.token == token:
+            return crud.update_user_email(db=db, user_id=db_user.id, mail=update_param)
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    db_user = crud.get_user_by_phonenumber(db=db, phonenumber=param)
+    if db_user is not None:
+        if db_user.token == token:
+            return crud.update_user_email(db=db, user_id=db_user.id, mail=update_param)
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    raise HTTPException(status_code=404, detail="User not found")
+
+
+@phonebook.post("/users/{param}/updateUserPhonenumber/", response_model=schemas.User)
+def update_user_by_param(param: str, token: str, update_param: str, db: Session = Depends(get_db)):
+    if not validate_phonenumber(update_param):
+        raise HTTPException(status_code=400, detail="Invalid Parameter, Please provide a valid new phone number")
+    if (not validate_email(param)) and (not validate_phonenumber(param)):
+        raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
+    db_user = crud.get_user_by_email(db=db, email=param)
+    if db_user is not None:
+        if db_user.token == token:
+            return crud.update_user_phonenumber(db=db, user_id=db_user.id, phone_number=update_param)
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    db_user = crud.get_user_by_phonenumber(db=db, phonenumber=param)
+    if db_user is not None:
+        if db_user.token == token:
+            return crud.update_user_phonenumber(db=db, user_id=db_user.id, phone_number=update_param)
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    raise HTTPException(status_code=404, detail="User not found")
     
 
 
