@@ -1,7 +1,7 @@
 from typing import List, Optional
 
-import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from sql_app import crud, models, schemas
@@ -43,10 +43,10 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid Phone number")
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=409, detail="Email already registered")
     db_user = crud.get_user_by_phonenumber(db, phonenumber=user.phonenumber)
     if db_user:
-        raise HTTPException(status_code=400, detail="Phone Number already registered")
+        raise HTTPException(status_code=409, detail="Phone Number already registered")
     return crud.create_user(db=db, user=user)
 
 
@@ -147,7 +147,7 @@ def get_contacts_of_user(param: str, token: str, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail="User not found")
 
 
-@phonebook.post("/users/{param}/updateUserEmail/", response_model=schemas.User)
+@phonebook.put("/users/{param}/updateUserEmail/", response_model=schemas.User)
 def update_user_by_param(param: str, token: str, update_param: str, db: Session = Depends(get_db)):
     if not validate_email(update_param):
         raise HTTPException(status_code=400, detail="Invalid Parameter, Please provide a valid new email")
@@ -168,7 +168,7 @@ def update_user_by_param(param: str, token: str, update_param: str, db: Session 
     raise HTTPException(status_code=404, detail="User not found")
 
 
-@phonebook.post("/users/{param}/updateUserPhonenumber/", response_model=schemas.User)
+@phonebook.put("/users/{param}/updateUserPhonenumber/", response_model=schemas.User)
 def update_user_by_param(param: str, token: str, update_param: str, db: Session = Depends(get_db)):
     if not validate_phonenumber(update_param):
         raise HTTPException(status_code=400, detail="Invalid Parameter, Please provide a valid new phone number")
@@ -188,7 +188,27 @@ def update_user_by_param(param: str, token: str, update_param: str, db: Session 
             raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
     raise HTTPException(status_code=404, detail="User not found")
     
+@phonebook.delete("/users/{param}/deleteUser/")
+def delete_user(param: str, token: str, db: Session = Depends(get_db)):
+    if (not validate_email(param)) and (not validate_phonenumber(param)):
+        raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
+    db_user = crud.get_user_by_email(db=db, email=param)
+    if db_user is not None:
+        if db_user.token == token:
+            if crud.delete_user(db=db, user_id=db_user.id):
+                return JSONResponse(status_code=200, content={"message" : "User successfully deleted"})
+            else:
+                raise HTTPException(status_code=405, detail="Method not allowed")
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    db_user = crud.get_user_by_phonenumber(db=db, phonenumber=param)
+    if db_user is not None:
+        if db_user.token == token:
+            if crud.delete_user(db=db, user_id=db_user.id):
+                return JSONResponse(status_code=200, content={"message" : "User successfully deleted"})
+            else:
+                raise HTTPException(status_code=405, detail="Method not allowed")
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    raise HTTPException(status_code=404, detail="User not found")
 
-
-if __name__=="__main__":
-    uvicorn.run(phonebook, host="0.0.0.0", port=8000)

@@ -52,3 +52,12 @@ def update_user_phonenumber(db: Session, user_id: int, phone_number: str):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+def delete_user(db: Session, user_id: int):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    try:
+        db.delete(db_user)
+        db.commit()
+        return True
+    except:
+        return False
