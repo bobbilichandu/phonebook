@@ -10,6 +10,7 @@ This api allows a user to create an account, and add contacts to his account.
 ## How to use Phonebook?
 1. Clone the repository 
     > git clone https://github.com/chandu1263/phonebook.git
+
     > cd phonebook
 1. Create a virtual environment with python3.8 \
 reference: https://stackoverflow.com/questions/1534210/use-different-python-version-with-virtualenv
@@ -85,9 +86,34 @@ reference: https://stackoverflow.com/questions/1534210/use-different-python-vers
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token" : "string" \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 
+5. Update user email - **POST** \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/updateUserEmail \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token must be provided for authorization* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Body: \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token" : "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"update_param" : "string" (to be updated email) \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+5. Update user phone number - **POST** \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/updateUserPhonenumber \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token must be provided for authorization* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Body: \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token" : "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"update_param" : "string" (to be updated phone number) \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
 ## Http exceptions
 
     Used Http Error Exceptions for error handling
-    (https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+    (https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) 
+
+    Basic exceptions were used. 
+
 
 
