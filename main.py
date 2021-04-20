@@ -85,7 +85,7 @@ def create_contact_for_user(param: str, token: str, contact: schemas.ContactCrea
         param (str): [email or phone number]
         token (str): [authorization token]
         contact (schemas.ContactCreate): [contact (name, email, phonenumber)]
-        db (Session, optional): [database dependancy]. Defaults to Depends(get_db).
+        db (Session, optional): [database dependency]. Defaults to Depends(get_db).
 
     Raises:
         HTTPException: [400, not a valid email or phone number]
@@ -120,7 +120,7 @@ def get_contacts_of_user(param: str, token: str, db: Session = Depends(get_db)):
     Args:
         param (str): [mail or phone number]
         token (str): [authorization token]
-        db (Session, optional): [database dependancy]. Defaults to Depends(get_db).
+        db (Session, optional): [database dependency]. Defaults to Depends(get_db).
 
     Raises:
         HTTPException: [400, not a valid email or phone number]
@@ -148,7 +148,27 @@ def get_contacts_of_user(param: str, token: str, db: Session = Depends(get_db)):
 
 
 @phonebook.put("/users/{param}/updateUserEmail/", response_model=schemas.User)
-def update_user_by_param(param: str, token: str, update_param: str, db: Session = Depends(get_db)):
+def update_user_email(param: str, token: str, update_param: str, db: Session = Depends(get_db)):
+    """[update user email]
+
+    Args:
+        param (str): [email or phonenumber]
+        token (str): [authorization token]
+        update_param (str): [new to be update email]
+        db (Session, optional): [database dependency]. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: [400, invalid to be updated email]
+        HTTPException: [400, invlaid email or phonenumber]
+        HTTPException: [401, unauthorized action]
+        HTTPException: [404, user not found with given param]
+        HTTPException: [description]
+
+    Returns:
+        [user]: [updated user details]
+    """
+    if (update_param is None) or update_param == "":
+        raise HTTPException(status_code=204, detail="update param has no content")
     if not validate_email(update_param):
         raise HTTPException(status_code=400, detail="Invalid Parameter, Please provide a valid new email")
     if (not validate_email(param)) and (not validate_phonenumber(param)):
@@ -169,7 +189,27 @@ def update_user_by_param(param: str, token: str, update_param: str, db: Session 
 
 
 @phonebook.put("/users/{param}/updateUserPhonenumber/", response_model=schemas.User)
-def update_user_by_param(param: str, token: str, update_param: str, db: Session = Depends(get_db)):
+def update_user_phonenumber(param: str, token: str, update_param: str, db: Session = Depends(get_db)):
+    """[update user phone number]
+
+    Args:
+        param (str): [email or phonenumber]
+        token (str): [authorization token]
+        update_param (str): [new to be update phone number]
+        db (Session, optional): [database dependency]. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: [400, invalid to be updated phone number]
+        HTTPException: [400, invlaid email or phonenumber]
+        HTTPException: [401, unauthorized action]
+        HTTPException: [404, user not found with given param]
+        HTTPException: [description]
+
+    Returns:
+        [user]: [updated user details]
+    """
+    if (update_param is None) or update_param == "":
+        raise HTTPException(status_code=204, detail="update param has no content") 
     if not validate_phonenumber(update_param):
         raise HTTPException(status_code=400, detail="Invalid Parameter, Please provide a valid new phone number")
     if (not validate_email(param)) and (not validate_phonenumber(param)):
@@ -190,6 +230,22 @@ def update_user_by_param(param: str, token: str, update_param: str, db: Session 
     
 @phonebook.delete("/users/{param}/deleteUser/")
 def delete_user(param: str, token: str, db: Session = Depends(get_db)):
+    """[delete user]
+
+    Args:
+        param (str): [email or phone number]
+        token (str): [authorization token]
+        db (Session, optional): [database dependency]. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: [400, invalid mail or phone number]
+        HTTPException: [405, method not allowed]
+        HTTPException: [401, unauthorized action]
+        HTTPException: [404, user not found]
+
+    Returns:
+        [response]: [json message]
+    """
     if (not validate_email(param)) and (not validate_phonenumber(param)):
         raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
     db_user = crud.get_user_by_email(db=db, email=param)
@@ -211,4 +267,5 @@ def delete_user(param: str, token: str, db: Session = Depends(get_db)):
         else:
             raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
     raise HTTPException(status_code=404, detail="User not found")
+
 

@@ -1,6 +1,10 @@
+import time
+from random import randint
+
 from sqlalchemy.orm import Session
 
 from . import models, schemas
+
 
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
@@ -16,7 +20,7 @@ def get_user_by_phonenumber(db: Session, phonenumber: str):
     
 
 def create_user(db: Session, user:schemas.UserCreate):
-    token = hash(user.email + user.phonenumber)
+    token = hash(user.email + user.phonenumber + str(time.time()) + str(randint(0,1000000)))
     db_user = models.User(email=user.email, phonenumber=user.phonenumber, name=user.name, token=token)
     db.add(db_user)
     db.commit()
@@ -55,7 +59,12 @@ def update_user_phonenumber(db: Session, user_id: int, phone_number: str):
 
 def delete_user(db: Session, user_id: int):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    skip = 0
+    limit = 100
     try:
+        db_contacts = db.query(models.Contact).filter(models.Contact.owner_id == user_id).offset(skip).limit(limit).all()
+        for db_contact in db_contacts:
+            db.delete(db_contact)
         db.delete(db_user)
         db.commit()
         return True
