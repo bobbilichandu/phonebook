@@ -51,7 +51,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 @phonebook.get("/users/{param}/", response_model=schemas.User)
-def get_user_by_emailid(param: str, db: Session = Depends(get_db)):
+def get_user_by_param(param: str, db: Session = Depends(get_db)):
     """[Returns a user if exists with parameter as email or Phone number]
 
     Args:
@@ -269,3 +269,87 @@ def delete_user(param: str, token: str, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail="User not found")
 
 
+@phonebook.put("/users/{param}/updateContactEmail")
+def update_user_contact_email(param: str, email: str, newmail: str, token: str, db: Session = Depends(get_db)):
+    """[Update email of a contact for a user]
+
+    Args:
+        param (str): [email or phonenumber to identify user]
+        email (str): [email of the contact that need to be updated]
+        newmail (str): [new email]
+        token (str): [authorization token]
+        db (Session, optional): [database dependancy]. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: [400, invalid mail or phone number]
+        HTTPException: [405, method not allowed]
+        HTTPException: [401, unauthorized action]
+        HTTPException: [404, user not found]
+
+    Returns:
+        [contact]: [updated contact]
+    """
+    if (not validate_email(param)) and (not validate_phonenumber(param)):
+        raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
+    db_user = crud.get_user_by_email(db=db, email=param)
+    if db_user is not None:
+        if db_user.token == token:
+            try:
+                return crud.update_contact_email(db=db, user_id=db_user.id, email=email, mail=newmail)
+            except:
+                raise HTTPException(status_code=405, detail="Method not allowed")
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    db_user = crud.get_user_by_phonenumber(db=db, phonenumber=param)
+    if db_user is not None:
+        if db_user.token == token:
+            try:
+                return crud.update_contact_email(db=db, user_id=db_user.id, email=email, mail=newmail)
+            except:
+                raise HTTPException(status_code=405, detail="Method not allowed")
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    raise HTTPException(status_code=404, detail="User not found")
+
+
+@phonebook.put("/users/{param}/updateContactPhonenumber")
+def update_user_contact_phonenumber(param: str, phonenumber: str, newphonenumber: str, token: str, db: Session = Depends(get_db)):
+    """[Update phonenumber of a contact for a user]
+
+    Args:
+        param (str): [email or phonenumber to identify user]
+        email (str): [phonenumber of the contact that need to be updated]
+        newmail (str): [new phonenumber]
+        token (str): [authorization token]
+        db (Session, optional): [database dependancy]. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: [400, invalid mail or phone number]
+        HTTPException: [405, method not allowed]
+        HTTPException: [401, unauthorized action]
+        HTTPException: [404, user not found]
+
+    Returns:
+        [contact]: [updated contact]
+    """
+    if (not validate_email(param)) and (not validate_phonenumber(param)):
+        raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
+    db_user = crud.get_user_by_email(db=db, email=param)
+    if db_user is not None:
+        if db_user.token == token:
+            try:
+                return crud.update_contact_phonenumber(db=db, user_id=db_user.id, phonenumber=phonebook, newphonenumber=newphonenumber)
+            except:
+                raise HTTPException(status_code=405, detail="Method not allowed")
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    db_user = crud.get_user_by_phonenumber(db=db, phonenumber=param)
+    if db_user is not None:
+        if db_user.token == token:
+            try:
+                return crud.update_contact_phonenumber(db=db, user_id=db_user.id, phonenumber=phonebook, newphonenumber=newphonenumber)
+            except:
+                raise HTTPException(status_code=405, detail="Method not allowed")
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    raise HTTPException(status_code=404, detail="User not found")

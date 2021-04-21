@@ -70,3 +70,19 @@ def delete_user(db: Session, user_id: int):
         return True
     except:
         return False
+    
+def update_contact_email(db: Session, user_id: int, email: str, mail: str):
+    db_contact = db.query(models.Contact).filter(models.Contact.owner_id == user_id and models.Contact.email == email).first()
+    db_contact.email = mail
+    db.add(db_contact)
+    db.commit()
+    db.refresh(db_contact)
+    return db_contact
+
+def update_contact_phonenumber(db: Session, user_id: int, phonenumber: str, newphonenumber: str):
+    db_contact = db.query(models.Contact).filter(models.Contact.owner_id == user_id and models.Contact.phonenumber == phonenumber).first()
+    db_contact.phonenumber = newphonenumber
+    db.add(db_contact)
+    db.commit()
+    db.refresh(db_contact)
+    return db_contact
