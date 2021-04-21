@@ -86,7 +86,7 @@ reference: https://stackoverflow.com/questions/1534210/use-different-python-vers
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token" : "string" \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 
-5. Update user email - **POST** \
+5. Update user email - **PUT** \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/updateUserEmail \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token must be provided for authorization* \
@@ -97,7 +97,7 @@ reference: https://stackoverflow.com/questions/1534210/use-different-python-vers
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"update_param" : "string" (to be updated email) \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 
-5. Update user phone number - **POST** \
+5. Update user phone number - **PUT** \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/updateUserPhonenumber \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token must be provided for authorization* \
@@ -108,6 +108,15 @@ reference: https://stackoverflow.com/questions/1534210/use-different-python-vers
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"update_param" : "string" (to be updated phone number) \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 
+6. Delete user - **DELETE** \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/deleteUser \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token must be provided for authorization* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Body: \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token" : "string" \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 ## Http exceptions
 
     Used Http Error Exceptions for error handling
