@@ -86,3 +86,17 @@ def update_contact_phonenumber(db: Session, user_id: int, phonenumber: str, newp
     db.commit()
     db.refresh(db_contact)
     return db_contact
+
+def delete_contact(db: Session, user_id: int, contact_param: str):
+    db_contact = db.query(models.Contact).filter(models.Contact.owner_id == user_id 
+                                                 and (models.Contact.phonenumber == contact_param 
+                                                      or models.Contact.email == contact_param)).first()
+    if db_contact is None:
+        return False
+    print(db_contact.email)
+    try:
+        db.delete(db_contact)
+        db.commit()
+        return True
+    except:
+        return False
