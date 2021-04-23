@@ -97,7 +97,7 @@ reference: https://stackoverflow.com/questions/1534210/use-different-python-vers
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"update_param" : "string" (to be updated email) \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 
-5. Update user phone number - **PUT** \
+6. Update user phone number - **PUT** \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/updateUserPhonenumber \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token must be provided for authorization* \
@@ -108,7 +108,7 @@ reference: https://stackoverflow.com/questions/1534210/use-different-python-vers
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"update_param" : "string" (to be updated phone number) \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 
-6. Delete user - **DELETE** \
+7. Delete user - **DELETE** \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/deleteUser \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token must be provided for authorization* \
@@ -116,6 +116,42 @@ reference: https://stackoverflow.com/questions/1534210/use-different-python-vers
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ \
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token" : "string" \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+8. Update user contact email - **PUT** \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/updateContactEmail \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token must be provided for authorization* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Body: \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token" : "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"email" : "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"newmail" : "string" \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+9. Update user contact phone number - **PUT** \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/updateContactPhonenumber \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token must be provided for authorization* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Body: \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token" : "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"phonenumber" : "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"newphonenumber" : "string" \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+10. Delete user contact - **PUT** \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/deleteUserContact \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token must be provided for authorization* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*contact_param can be mail or phone number for identifying contact of the user* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Body: \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token" : "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"contact_param" : "string" \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 ## Http exceptions
 
