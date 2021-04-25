@@ -50,7 +50,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
-@phonebook.get("/users/{param}/", response_model=schemas.User)
+@phonebook.get("/users/{param}/")
 def get_user_by_param(param: str, db: Session = Depends(get_db)):
     """[Returns a user if exists with parameter as email or Phone number]
 
@@ -63,18 +63,18 @@ def get_user_by_param(param: str, db: Session = Depends(get_db)):
         HTTPException: [400, Invalid Parameter, Please use a valid email or phone number]
 
     Returns:
-        [user]: [returns name, email, phonenumber if user with requested paramter existed]
+        [user]: [returns name, email, phonenumber if user with requested parameter existed]
     """
     
     if (not validate_email(param)) and (not validate_phonenumber(param)):
         raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
     db_user = crud.get_user_by_email(db=db, email=param)
     if db_user is not None:
-        return db_user
+        return JSONResponse(status_code=200, content={"mail": db_user.email,"phonenumber": db_user.phonenumber}) 
     db_user = crud.get_user_by_phonenumber(db=db, phonenumber=param)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return db_user
+    return JSONResponse(status_code=200, content={"mail": db_user.email,"phonenumber": db_user.phonenumber}) 
 
 
 @phonebook.post("/users/{param}/addcontact/", response_model=schemas.Contact)
@@ -329,7 +329,7 @@ def update_user_contact_phonenumber(param: str, phonenumber: str, newphonenumber
         phonenumber (str): [phonenumber of the contact that need to be updated]
         newphonenumber (str): [new phonenumber]
         token (str): [authorization token]
-        db (Session, optional): [database dependancy]. Defaults to Depends(get_db).
+        db (Session, optional): [database dependency]. Defaults to Depends(get_db).
 
     Raises:
         HTTPException: [400, invalid mail or phone number]
