@@ -99,14 +99,20 @@ def create_contact_for_user(param: str, token: str, contact: schemas.ContactCrea
     if (not validate_email(param)) and (not validate_phonenumber(param)):
         raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
     db_user = crud.get_user_by_email(db=db, email=param)
+    
     if db_user is not None:
         if db_user.token == token:
+            if(crud.contact_check(db=db, user_id=db_user.id, contact_mail=contact.email, contact_phonenumber=contact.phonenumber)):
+                raise HTTPException(status_code=409, detail="a contact already exists with provided mail and phone number") 
             return crud.create_user_contact(db=db, contact=contact, user_id=db_user.id)
         else:
             raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+        
     db_user = crud.get_user_by_phonenumber(db=db, phonenumber=param)
     if db_user is not None:
         if db_user.token == token:
+            if(crud.contact_check(db=db, user_id=db_user.id, contact_mail=contact.email, contact_phonenumber=contact.phonenumber)):
+                raise HTTPException(status_code=409, detail="a contact already exists with provided mail and phone number")
             return crud.create_user_contact(db=db, contact=contact, user_id=db_user.id)
         else:
             raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")

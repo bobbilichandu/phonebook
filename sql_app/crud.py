@@ -37,6 +37,14 @@ def create_user_contact(db: Session, contact: schemas.ContactCreate, user_id: in
     db.refresh(db_contact)
     return db_contact
 
+def contact_check(db: Session, user_id: int, contact_mail: str, contact_phonenumber: str):
+    db_contact = db.query(models.Contact).filter(models.Contact.owner_id == user_id).filter(models.Contact.email == contact_mail).filter(models.Contact.phonenumber == contact_phonenumber).first()
+    if db_contact is not None:
+        return True
+    else:
+        return False
+        
+
 def update_user_email(db: Session, user_id: int, mail: str):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user is None:
