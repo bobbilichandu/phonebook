@@ -3,7 +3,7 @@ A simple python api developed using fastapi to learn basic syntax and types and 
 Python version - *3.8* \
 FastAPI - *0.63.0* \
 sqlalchemy - *1.4.9* \
-pydantic - *1.8.1*  
+pydantic - *1.8.2*  
 
 This api allows a user to create an account, and add contacts to his account.
 
@@ -152,6 +152,16 @@ reference: https://stackoverflow.com/questions/1534210/use-different-python-vers
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token" : "string" \
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"contact_param" : "string" \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+11. Make Premium User - **PUT** \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/admin/{param}/premiumUser \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Admin token must be provided for authorization* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Body: \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"admin_token" : "string" \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 ## Http exceptions
 
