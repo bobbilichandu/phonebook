@@ -3,7 +3,7 @@ A simple python api developed using fastapi to learn basic syntax and types and 
 Python version - *3.8* \
 FastAPI - *0.63.0* \
 sqlalchemy - *1.4.9* \
-pydantic - *1.8.1*  
+pydantic - *1.8.2*  
 
 This api allows a user to create an account, and add contacts to his account.
 
