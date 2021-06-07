@@ -108,3 +108,16 @@ def delete_contact(db: Session, user_id: int, contact_param: str):
         return True
     except:
         return False
+    
+def update_user_premium_status(db: Session, user_id: int):
+    try:
+        db_user = db.query(models.User).filter(models.User.id == user_id).first()
+        if db_user is None:
+            return False
+        db_user.premium = True
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        return True
+    except Exception as e:
+        print(e)

@@ -11,6 +11,7 @@ from validation import validate_email, validate_phonenumber
 models.Base.metadata.create_all(bind=engine)
 
 phonebook = FastAPI()
+ADMIN_TOKEN = "123456"
 
 def get_db():
     db = SessionLocal()
@@ -373,7 +374,7 @@ def delete_user_contact(param: str, token: str, contact_param: str, db: Session 
         param (str): [email or phone number of user]
         token (str): [authorization token]
         contact_param (str): [email or phone number of contact]
-        db (Session, optional): [database dependancy]. Defaults to Depends(get_db).
+        db (Session, optional): [database dependency]. Defaults to Depends(get_db).
 
     Raises:
         HTTPException: [400, invalid mail or phone number]
@@ -414,3 +415,29 @@ def delete_user_contact(param: str, token: str, contact_param: str, db: Session 
         else:
             raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
     raise HTTPException(status_code=404, detail="User not found")
+
+
+@phonebook.post("/admin/{param}/premiumUser")
+def make_premium_user(param: str, admin_token: str, db: Session = Depends(get_db)):
+    if (not validate_email(param)) and (not validate_phonenumber(param)):
+        raise HTTPException(status_code=400, detail="param: Invalid Parameter, Please use a valid email or phone number")
+    if admin_token != ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="Unauthorized access, please provide valid admin token")
+    db_user = crud.get_user_by_email(db=db, email=param)
+    if db_user is not None:
+        try:
+            crud.update_user_premium_status(db=db, user_id=db_user.id)
+            return JSONResponse(status_code=200, content={"message" : "successfully updated the user premium status"})
+        except:
+            raise HTTPException(status_code=405, detail="Method not allowed")
+    db_user = crud.get_user_by_phonenumber(db=db, phonenumber=param)
+    if db_user is not None:
+        try:
+            crud.update_user_premium_status(db=db, user_id=db_user.id)
+            return JSONResponse(status_code=200, content={"message" : "successfully updated the user premium status"})
+        except:
+            raise HTTPException(status_code=405, detail="Method not allowed")
+    if db_user is not None:
+        return JSONResponse(status_code=200, content={"successfully updated the user premium status"})
+    raise HTTPException(status_code=404, detail="User not found")
+    
