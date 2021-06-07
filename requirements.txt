@@ -3,7 +3,8 @@ fastapi==0.63.0
 FastAPI-SQLAlchemy==0.2.1
 greenlet==1.0.0
 h11==0.12.0
-pydantic==1.8.1
+pydantic==1.8.2
+rope==0.19.0
 SQLAlchemy==1.4.9
 starlette==0.13.6
 typing-extensions==3.7.4.3
