@@ -88,6 +88,24 @@ def get_user_by_param(param: str, token: str, db: Session = Depends(get_db)):
 
 @phonebook.get('/premiumUser/getUser/{param}')
 def get_user(param: str, premium_user_param: str, premium_user_token, db: Session = Depends(get_db)):
+    """[get user for premium user]
+
+    Args:
+        param (str): [email or phone number of requested user]
+        premium_user_param (str): [email or phone number of premium user]
+        premium_user_token ([type]): [premium user token]
+        db (Session, optional): [description]. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: [404, User not found]
+        HTTPException: [404, Premium user not found]
+        HTTPException: [400, Invalid Parameter, Please use a valid email or phone number]
+        HTTPException: [400, Invalid Parameter, Please use a valid email or phone number for premium user]
+        HTTPException: [401, Unauthorized action, only premium users allowed]
+
+    Returns:
+        [user]: [returns user name, user email, user phone number]
+    """
     if (not validate_email(param)) and (not validate_phonenumber(param)):
         raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
     if (not validate_email(premium_user_param)) and (not validate_phonenumber(premium_user_param)):
