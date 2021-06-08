@@ -52,16 +52,18 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 @phonebook.get("/users/{param}/")
-def get_user_by_param(param: str, db: Session = Depends(get_db)):
+def get_user_by_param(param: str, token: str, db: Session = Depends(get_db)):
     """[Returns a user if exists with parameter as email or Phone number]
 
     Args:
         param (str): [email or phone number]
+        token (Str): [token for authorization]
         db (Session, optional): [database dependency]. Defaults to Depends(get_db).
 
     Raises:
         HTTPException: [404, User not found]
         HTTPException: [400, Invalid Parameter, Please use a valid email or phone number]
+        HTTPException: [401, Unauthorized action]
 
     Returns:
         [user]: [returns name, email, phonenumber if user with requested parameter existed]
@@ -71,14 +73,68 @@ def get_user_by_param(param: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
     db_user = crud.get_user_by_email(db=db, email=param)
     if db_user is not None:
-        return JSONResponse(status_code=200, content={"mail": db_user.email,"phonenumber": db_user.phonenumber}) 
+        if db_user.token == token:
+            return JSONResponse(status_code=200, content={"mail": db_user.email,"phonenumber": db_user.phonenumber}) 
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
     db_user = crud.get_user_by_phonenumber(db=db, phonenumber=param)
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return JSONResponse(status_code=200, content={"mail": db_user.email,"phonenumber": db_user.phonenumber}) 
+    if db_user is not None:
+        if db_user.token == token:
+            return JSONResponse(status_code=200, content={"mail": db_user.email,"phonenumber": db_user.phonenumber}) 
+        else:
+            raise HTTPException(status_code=401, detail="Unauthorized action, please provide valid token")
+    raise HTTPException(status_code=404, detail="User not found")
 
 
-@phonebook.post("/users/{param}/addcontact/", response_model=schemas.Contact)
+@phonebook.get('/premiumUser/getUser/{param}')
+def get_user(param: str, premium_user_param: str, premium_user_token, db: Session = Depends(get_db)):
+    if (not validate_email(param)) and (not validate_phonenumber(param)):
+        raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid email or phone number")
+    if (not validate_email(premium_user_param)) and (not validate_phonenumber(premium_user_param)):
+        raise HTTPException(status_code=400, detail="Invalid Parameter, Please use a valid premium user email or premium user phone number")
+    db_user = crud.get_user_by_email(db=db, email=premium_user_param)
+    if db_user is not None:
+        if db_user.premium == False:
+            raise HTTPException(status_code=401, detail="Unauthorized access, only premium users allowed")
+        if db_user.token == premium_user_token:
+            requested_user = crud.get_user_by_email(db=db, email=param)
+            if requested_user is not None:
+                return JSONResponse(status_code=200, 
+                                    content={"name": requested_user.name, 
+                                             "mail": requested_user.email, 
+                                             "phonenumber": requested_user.phonenumber})
+            requested_user = crud.get_user_by_phonenumber(db=db, email=param)
+            if requested_user is not None:
+                return JSONResponse(status_code=200, 
+                                    content={"name": requested_user.name, 
+                                             "mail": requested_user.email, 
+                                             "phonenumber": requested_user.phonenumber})
+            raise HTTPException(status_code=404, detail="No user not found by given parameter")
+        else:
+            raise HTTPException(status_code=401, detail="Invalid token for the premium user")
+    db_user = crud.get_user_by_phonenumber(db=db, phonenumber=premium_user_param)
+    if db_user is not None:
+        if db_user.premium == False:
+            raise HTTPException(status_code=401, detail="Unauthorized access, only premium users allowed")
+        if db_user.token == premium_user_token:
+            requested_user = crud.get_user_by_email(db=db, email=param)
+            if requested_user is not None:
+                return JSONResponse(status_code=200, 
+                                    content={"name": requested_user.name, 
+                                             "mail": requested_user.email, 
+                                             "phonenumber": requested_user.phonenumber})
+            requested_user = crud.get_user_by_phonenumber(db=db, email=param)
+            if requested_user is not None:
+                return JSONResponse(status_code=200, 
+                                    content={"name": requested_user.name, 
+                                             "mail": requested_user.email, 
+                                             "phonenumber": requested_user.phonenumber})
+            raise HTTPException(status_code=404, detail="No user not found by given parameter")
+        else:
+            raise HTTPException(status_code=401, detail="Invalid token for the premium user")
+    raise HTTPException(status_code=404, detail="No premium user not found by given parameter")
+
+@phonebook.post("/users/{param}/addContact/", response_model=schemas.Contact)
 def create_contact_for_user(param: str, token: str, contact: schemas.ContactCreate, db: Session = Depends(get_db)):
     """[creates a contact for the user if token validates with the user]
 
@@ -381,7 +437,7 @@ def delete_user_contact(param: str, token: str, contact_param: str, db: Session 
         HTTPException: [405, method not allowed]
         HTTPException: [401, unauthorized action]
         HTTPException: [404, user not found]
-        HTTPException: [405, N0 such contact exists]
+        HTTPException: [405, No such contact exists]
 
     Returns:
         [JSONResponse]: [200, Contact successfully deleted]
@@ -419,6 +475,22 @@ def delete_user_contact(param: str, token: str, contact_param: str, db: Session 
 
 @phonebook.post("/admin/{param}/premiumUser")
 def make_premium_user(param: str, admin_token: str, db: Session = Depends(get_db)):
+    """[activate a user's premium access]
+
+    Args:
+        param (str): [email or phone number of the user]
+        admin_token (str): [admin token]
+        db (Session, optional): [database dependency]. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: [400, invalid mail or phone number]
+        HTTPException: [405, method not allowed]
+        HTTPException: [401, unauthorized action]
+        HTTPException: [404, user not found]
+
+    Returns:
+        [JSONResponse]: [200, Successfully activated user's premium access]
+    """
     if (not validate_email(param)) and (not validate_phonenumber(param)):
         raise HTTPException(status_code=400, detail="param: Invalid Parameter, Please use a valid email or phone number")
     if admin_token != ADMIN_TOKEN:
