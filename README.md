@@ -59,9 +59,11 @@ reference: https://stackoverflow.com/questions/1534210/use-different-python-vers
 2. Get user data - **GET** \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/users/{param}/ \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*token is for authorization for the requested user* \
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Body: \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ \
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"token": "string" \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 
 3. Add contact details - **POST** \
@@ -163,6 +165,19 @@ reference: https://stackoverflow.com/questions/1534210/use-different-python-vers
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"admin_token" : "string" \
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+12. Get user (for premium users)- **GET** \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ip:port/premiumUser/getUser/{param} \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*param can be mail or phone number for identifying the user* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Premium user param can be mail or phone number for identifying the premium user* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Premium token must be provided for authorization* \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Body: \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"param": "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"premium_user_param" : "string" \
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"premium_user_token" : "string" \
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
 ## Http exceptions
 
     Used Http Error Exceptions for error handling
